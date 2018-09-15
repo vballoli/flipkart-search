@@ -34,8 +34,9 @@ class ProductSpider(scrapy.Spider):
 		product_rating = str(response.selector.xpath('//span[@class="_2_KrJI"]/div/text()').extract_first())
 		product_price = str(response.selector.xpath('//div[@class="_1uv9Cb"]/div/text()').extract_first())
 		product_review_url = self.base_url + str(response.selector.xpath('//div[@class="col _39LH-M"]/a/@href').extract_first())
+		product_specs = list(response.selector.xpath('//div[@class="_3WHvuP"]/ul/li/text()').extract())
 		print(product_review_url)
-		self.product_info_list.append([product_title, product_price, product_rating, product_review_url])
+		self.product_info_list.append([product_title, product_price, product_rating, product_review_url, product_specs])
 		print("Count == " + str(self.count))
 		print("List len " + str(len(self.product_info_list)))
 		if self.count == len(self.product_info_list):

@@ -9,8 +9,10 @@ class ReviewSpider(scrapy.Spider):
         self.base_url = "https://www.flipkart.com"
         self.length = 0
         self.count = 0
+        self.specs = []
 
     def start_requests(self):
+        os.mkdir('infos')
         with open('product_info.pickle', 'rb') as f:
             product_info = pickle.load(f)
             urls = []
@@ -18,12 +20,12 @@ class ReviewSpider(scrapy.Spider):
             for product in product_info:
                 if str(product[3]).find('None') < 0:
                     urls.append(product[3])
-                    
+                    self.specs.append(product[4])
+
             for url in urls:
                 yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
-        self.count += 1
         try:
             product_name = response.selector.xpath('//div[@class="_1SFrA2"]/span/text()').extract_first()
             print(product_name)
@@ -36,9 +38,14 @@ class ReviewSpider(scrapy.Spider):
             review_contents = response.selector.xpath('//div[@class="col _390CkK"]/div/div/div/div/text()').extract()
             print(review_contents)
             d = dict()
+            product_specs = self.specs[self.count]
+            self.count += 1
             for i in range(len(review_titles)):
                 d[review_titles[i]] = review_contents[i]
-                with open('infos/' + str(product_name) + '.pickle', 'wb') as p:
-                    pickle.dump(d, p)
+            d['specs'] = product_specs
+            with open('infos/' + str(product_name) + '.pickle', 'wb') as p:
+                pickle.dump(d, p)
+
         except Exception as e:
+            print(e)
             pass
