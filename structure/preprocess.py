@@ -6,26 +6,50 @@ from nltk.stem import PorterStemmer
 from nltk.corpus import stopwords
 
 def load_reviews():
-        product_data = pickle.load(open('product_info.pickle', 'rb'))
+    """
+    Loads dataset from infos folder
+    """
+    product_data = []
+    for file in os.listdir('../scraping/flipkart/infos'):
+        filename = os.fsdecode(file)
+        dict = pickle.load(open('../scraping/flipkart/infos/'+filename, 'rb'))
+        product_data.append([filename[:-7], dict])
 
-        review_data = []
-        for file in os.listdir('infos'):
-            filename = os.fsdecode(file)
-            dict = pickle.load(open('infos/'+filename, 'rb'))
-            review_data.append([filename[:-7], dict])
-
-        return review_data
+    return product_data
 
 def process_reviews(reviews):
-    words =  [stop(stem(tokenize(clean(review)))) for review in cat(reviews)]
+    """
+    Input: dict of reviews
+    Ouptput: list containing stemmed reviews
+    """
+    words = []
+    for review in cat(reviews):
+        words = words + stop(stem(tokenize(clean(review))))
     return words
+
+def process_specs(specs):
+    """
+    Input: list of product specs
+    Output: list of stemmed specs
+    """
+    words = []
+    for spec in specs:
+        words = words + stop(stem(tokenize(clean(spec))))
+    return words
+
+def process_title(product_name):
+    """
+    Input: Product Name / Title
+    Output: Tokenized product title
+    """
+    return tokenize(clean(product_name))
 
 def cat(dict):
     full = [k+v for (k,v) in dict.items() if k != 'specs']
     return full
 
 def clean(text):
-    text = re.sub("[^A-Za-z0-9]+", ' ', text).lower()
+    text = re.sub("\W+", ' ', text).lower()
     return text
 
 def tokenize(text):

@@ -24,4 +24,4 @@ x_train_vectorized = vect.transform(x_train)
 clf = LogisticRegression()
 clf.fit(x_train_vectorized,y_train)
 
-pickle.dump(model, open("clf_model.pickle", 'wb'))
+pickle.dump(clf, open("clf_model.pk", 'wb'))
