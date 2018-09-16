@@ -12,6 +12,7 @@ class ReviewSpider(scrapy.Spider):
         self.specs = []
 
     def start_requests(self):
+        os.mkdir('infos')
         with open('product_info.pickle', 'rb') as f:
             product_info = pickle.load(f)
             urls = []
