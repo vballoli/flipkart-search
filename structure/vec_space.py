@@ -1,6 +1,6 @@
 import preprocess as pre
 import pickle
-import numpy as np
+from math import log, log10
 
 raw_data = pre.load_reviews()
 
@@ -16,7 +16,6 @@ for product_words in all_words:
     vocab += product_words
 
 vocab = list(set(vocab))
-print(len(vocab))
 
 del product_words
 
@@ -31,3 +30,12 @@ for word in vocab:
             if (product_word == word):
                 occurences += 1
         frequency_matrix[word].append(occurences)
+
+tfidf_mat = frequency_matrix
+for term in frequency_matrix:
+    row = frequency_matrix[term]
+    idf = log10(575/(575 - row.count(0)))
+    for i in range(575):
+        tfidf_mat[term][i] = log(1+frequency_matrix[term][i])*idf
+
+del frequency_matrix
