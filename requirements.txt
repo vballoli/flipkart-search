@@ -1,3 +1,6 @@
 scrapy
 nltk
-jupyter
+numpy
+scipy
+pandas
+scikit-learn

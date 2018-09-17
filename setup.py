@@ -1,9 +1,8 @@
 import os
 import importlib
+from zipfile import ZipFile
 
-from search.app import search
-
-cur_dir = os.curdir
+cur_dir = os.getcwd()
 
 def modules():
     """
@@ -11,8 +10,8 @@ def modules():
     """
     if importlib.util.find_spec("scrapy") is not None:
         if importlib.util.find_spec("nltk") is not None:
-            dataset()
-            return
+            if importlib.util.find_spec("sklearn") is not None:
+                dataset()
     try:
         print("Installing missing modules")
         os.system('pip3 install -r requirements.txt')
@@ -39,12 +38,13 @@ def dataset():
     """
     Checks scraped dataset
     """
+    from search.app import search
     os.chdir(cur_dir)
     try:
         print("Checking for dataset")
-        if os.listdir(os.curdir + '/scraping/flipkart').index('infos'):
-            if len(os.listdir(os.curdir + '/scraping/flipkart/infos')) > 0:
-                search(dataset_path=os.curdir + '/scraping/flipkart/infos')
+        if os.listdir(cur_dir + '/scraping/flipkart').index('infos'):
+            if len(os.listdir(cur_dir + '/scraping/flipkart/infos')) > 0:
+                search(dataset_path=cur_dir + '/scraping/flipkart/infos')
             else:
                 print("Dataset does not exist")
                 start_scrape()
@@ -52,6 +52,27 @@ def dataset():
         print("Dataset doesn't exist")
         start_scrape()
 
+def train_classifier():
+    """
+    Trains Sentiment Analysis Classifier
+    """
+    if os.path.isfile(cur_dir + '/sentiment/Amazon_Unlocked_Mobile.csv'):
+        pass
+    else:
+        with ZipFile(cur_dir + '/sentiment/Amazon_Unlocked_Mobile.csv.zip', 'r') as zip:
+            zip.extractall("sentiment/")
+
+    print("Looking for existing classifier")
+    try:
+        if os.path.isfile(cur_dir + '/sentiment/sentiment_clf.pickle') and os.path.isfile(cur_dir + '/sentiment/vect.pickle'):
+            print("Found classifier")
+        else:
+            print("Classifier not found. Pretraining...")
+            os.system('python3 ' + cur_dir + '/sentiment/classifier.py')
+    except Exception as e:
+        pass
+
 if __name__=='__main__':
     print("Starting")
+    train_classifier()
     modules()

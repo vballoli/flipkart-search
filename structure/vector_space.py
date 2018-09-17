@@ -1,5 +1,5 @@
-from preprocess import *
-from helper import *
+from .preprocess import *
+from .helper import *
 import pickle
 from math import log, log10
 

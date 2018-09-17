@@ -1,6 +1,6 @@
 import os
 import pickle
-from helper import *
+from .helper import *
 
 
 def load_reviews(dataset_path):
