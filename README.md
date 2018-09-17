@@ -1,22 +1,17 @@
 # CSF469 Information Retrieval Assignment
+Aim: Implement a Vector Space model based search.
 
-## Get the dataset
+This project aims to implement an unbiased search across mobiles on Flipkart
+including: `Reviews and Specs` thus differing in the usual biased search
+off the website.
+
+## Run the app
 
 Software requirements: `python3` and `pip`
 
-Run the following in the rootdir/
+Run `python3 setup.py`
 
-1. `pip3 install -r requirements.txt`
-
-Run the following in rootdir/scraping/flipkart/
-
-2. `scrapy crawl FlipkartProduct`
-
-3. `scrapy crawl ProductSpider`
-
-4. `scrapy crawl ReviewSpider`
-
-Check for the pickles of each item in a dictionary {review title: review content} in the scraping/flipkart/infos
+Note: Downloading dataset will take time
 
 ## Implementation
 1. Each document contains the information, specs and reviews of all products scraped from Flipkart.

@@ -3,16 +3,17 @@ import pickle
 from helper import *
 
 
-def load_reviews():
+def load_reviews(dataset_path):
     """
     Loads dataset from infos folder
     """
+    print("Loading data")
     product_data = []
-    for file in os.listdir('../scraping/flipkart/infos'):
+    for file in os.listdir(dataset_path):
         filename = os.fsdecode(file)
-        dict = pickle.load(open('../scraping/flipkart/infos/'+filename, 'rb'))
+        dict = pickle.load(open(dataset_path + '/' +filename, 'rb'))
         product_data.append([filename[:-7], dict])
-
+    print("Successfully loaded!")
     return product_data
 
 def process_reviews(reviews):
