@@ -69,5 +69,4 @@ def train_classifier():
 if __name__=='__main__':
     print("Starting")
     train_classifier()
-    #modules()
-    dataset()
+    modules()
