@@ -4,6 +4,7 @@ import sys
 from tkinter import *
 from tkinter import ttk
 from ttkthemes import themed_tk as tk
+import time
 
 root_dir = os.getcwd()
 sys.path.insert(0, root_dir)
@@ -13,20 +14,25 @@ from structure.structure import *
 
 class PhoneGUI(Frame):
     """
-    GUI Window
+    Constructs GUI Window
     """
 
     def __init__(self, dataset_path):
         super().__init__()
-
         self.dataset_path = dataset_path
         self.results = []
+        with open('structure/corpus_list.pickle', 'rb') as f:
+            cl = pickle.load(f)
+        with open(root_dir + "/structure/tf_idf_matrix.pickle", 'rb') as f:
+            tf_idf_matrix = pickle.load(f)
+        self.tf_idf_matrix = tf_idf_matrix
+        self.cl = cl
         self.initUI()
 
     def get_result(self, frames, entry, dataset_path):
         for frame in frames:
             frame.pack_forget()
-        self.results = search(qin=entry.get(), dataset_path=dataset_path)
+        self.results = search(qin=entry.get(), dataset_path=dataset_path, cl=self.cl, tf_idf_matrix=self.tf_idf_matrix)
         self.initUI()
 
     def initUI(self):
@@ -65,35 +71,38 @@ class PhoneGUI(Frame):
         res_txt.tag_config("result", font='Calibri 13 ', foreground='white')
 
 
-def search(qin, K=10, dataset_path=None):
+def search(qin, K=10, dataset_path=None, cl=None, tf_idf_matrix=None):
     """
-    Search app
+    Processes the query(qin) and returns result
     """
     try:
         if os.path.isfile(root_dir + "/structure/tf_idf_matrix.pickle"):
+            document_list = os.listdir(root_dir + '/scraping/flipkart/infos')
+            print("Data loaded")
+        else:
+            matrix_time = time.time()
+            prepare_search(dataset_path)
+            print("Building matrices finished in: " + str(time.time() - matrix_time))
             with open(root_dir + "/structure/tf_idf_matrix.pickle", 'rb') as f:
                 tf_idf_matrix = pickle.load(f)
             document_list = os.listdir(root_dir + '/scraping/flipkart/infos')
             print("Data loaded")
-        else:
-            prepare_search(dataset_path)
-            search()
+
     except Exception as e:
+        print("Exception")
         pass
 
     while (True):
-        print("Enter Query \n"
-            + "Current max result length = "+ str(K) +". To change, type '||K||'(without '') . \n"
-            + "Type 'exit<>' (without '') to exit.")
+        query_time = time.time()
         query = qin
         if query != "exit<>" and query != "||K||":
             query = stop(stem(tokenize(clean(query))))
             print(query)
             score = []
             N = len(tf_idf_matrix[list(tf_idf_matrix.keys())[0]])
-            print("N in app: " + str(N))
             for _ in range(N):
                 score.append(0)
+            results = []
             try:
                 for term in query:
                     wtq = query.count(term)
@@ -101,20 +110,20 @@ def search(qin, K=10, dataset_path=None):
                         wtd = tf_idf_matrix[term][i]
                         score[i] += wtd * wtq
             except KeyError as e:
-                print("No results found")
-                search(K)
+                results.append("No results found for " + qin)
+                return results
 
             for i in range(N):
-                score[i] = score[i] / N
-            #print("Number of results: " + str(K) + '\n')
+                score[i] = score[i] / len(cl[i])
+
             prev = None
-            results = []
             for highscore in sorted(score, reverse=True)[:K]:
                 device_name = document_list[score.index(highscore)]
+                print(str(device_name).strip(".pickle") + get_sentiment(device_name))
                 if device_name != prev:
                     results.append(str(device_name).strip(".pickle") + get_sentiment(device_name))
-                    #print(str(device_name).strip(".pickle") + get_sentiment(device_name))
                     prev = device_name
+            print("Search time: " + str(time.time() - query_time))
             return results
         elif query == "exit<>":
             exit()
@@ -124,12 +133,19 @@ def search(qin, K=10, dataset_path=None):
 
 
 def run_gui(K=10, dataset_path=None):
-    root = tk.ThemedTk()
-    root.get_themes()
-    root.set_theme('black')
-    root.geometry("600x300")
-    app = PhoneGUI(dataset_path)
-    root.mainloop()
-
-if __name__=="__main__":
-    run_gui()
+    """
+    Starts the GUI for search
+    """
+    try:
+        if os.path.isfile(root_dir + "/structure/tf_idf_matrix.pickle"):
+            root = tk.ThemedTk()
+            root.get_themes()
+            root.set_theme('black')
+            root.geometry("600x300")
+            app = PhoneGUI(dataset_path)
+            root.mainloop()
+        else:
+            prepare_search(dataset_path)
+            run_gui(dataset_path=dataset_path)
+    except Exception as e:
+        pass

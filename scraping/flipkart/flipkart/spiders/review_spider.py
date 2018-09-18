@@ -28,11 +28,11 @@ class ReviewSpider(scrapy.Spider):
     def parse(self, response):
         try:
             product_name = response.selector.xpath('//div[@class="_1SFrA2"]/span/text()').extract_first()
-            print(product_name)
+            product_name = str(product_name)
             product_rating = response.selector.xpath('//div[@class="niH0FQ _36Fcw_"]/span/div/text()').extract_first()
             print(product_rating)
-            prodcut_price = response.selector.xpath('//div[@class="_1vC4OE"]/text()').extract_first()
-            print(prodcut_price)
+            product_price = response.selector.xpath('//div[@class="_1vC4OE"]/text()').extract_first()
+            product_price = str(product_price)
             review_titles = response.selector.xpath('//div[@class="col _390CkK"]/div/p/text()').extract()
             print(review_titles)
             review_contents = response.selector.xpath('//div[@class="col _390CkK"]/div/div/div/div/text()').extract()
@@ -43,7 +43,7 @@ class ReviewSpider(scrapy.Spider):
             for i in range(len(review_titles)):
                 d[review_titles[i]] = review_contents[i]
             d['specs'] = product_specs
-            with open('infos/' + str(product_name) + '.pickle', 'wb') as p:
+            with open('infos/' + product_name + " " + product_price + '.pickle', 'wb') as p:
                 pickle.dump(d, p)
 
         except Exception as e:

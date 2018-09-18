@@ -1,12 +1,14 @@
 from .vector_space import VectorSpace
 from .preprocess import *
 from scipy import stats
+import time
 
 def prepare_search(dataset_path):
     """
     Prepares search for the Search app
     """
     print("Preparing search")
+    generation_time = time.time()
     raw_data = load_reviews(dataset_path)
     print("Len " + str(len(raw_data)))
     vector_space = VectorSpace()
@@ -17,6 +19,12 @@ def prepare_search(dataset_path):
     with open('structure/tf_idf_matrix.pickle', 'wb') as f:
         pickle.dump(tf_idf_matrix, f)
         print("TF-IDF Matrix saved")
+    for i in range(len(corpus_list)):
+        corpus_list[i] = list(set(corpus_list[i]))
+    with open('structure/corpus_list.pickle', 'wb') as f:
+        pickle.dump(corpus_list, f)
+        print("Corpus list saved")
+    print("Matrices generated in: " + str(time.time() - generation_time))
 
 def get_sentiment(device_name):
     """
