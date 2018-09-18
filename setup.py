@@ -58,7 +58,7 @@ def train_classifier():
     """
     print("Looking for classifier")
     try:
-        if os.path.isfile(cur_dir + '/sentiment/sentiment_clf.pickle') and os.path.isfile(cur_dir + '/sentiment/vect.pickle'):
+        if os.path.isfile(cur_dir + '/sentiment/sentiment_clf.pk') and os.path.isfile(cur_dir + '/sentiment/vect.pk'):
             print("Found classifier")
         else:
             print("Classifier not found. Pretraining...")
@@ -69,4 +69,5 @@ def train_classifier():
 if __name__=='__main__':
     print("Starting")
     train_classifier()
-    modules()
+    #modules()
+    dataset()
