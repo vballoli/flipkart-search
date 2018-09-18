@@ -56,13 +56,7 @@ def train_classifier():
     """
     Trains Sentiment Analysis Classifier
     """
-    if os.path.isfile(cur_dir + '/sentiment/Amazon_Unlocked_Mobile.csv'):
-        pass
-    else:
-        with ZipFile(cur_dir + '/sentiment/Amazon_Unlocked_Mobile.csv.zip', 'r') as zip:
-            zip.extractall("sentiment/")
-
-    print("Looking for existing classifier")
+    print("Looking for classifier")
     try:
         if os.path.isfile(cur_dir + '/sentiment/sentiment_clf.pickle') and os.path.isfile(cur_dir + '/sentiment/vect.pickle'):
             print("Found classifier")

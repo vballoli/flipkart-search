@@ -22,8 +22,8 @@ def get_sentiment(device_name):
     """
     Returns sentiment for a particular phone
     """
-    classifier = pickle.load(open('sentiment/sentiment_clf.pickle', 'rb'))
-    vectorizer = pickle.load(open('sentiment/vect.pickle', 'rb'))
+    classifier = pickle.load(open('sentiment/sentiment_clf.pk', 'rb'))
+    vectorizer = pickle.load(open('sentiment/vect.pk', 'rb'))
     try:
         with open('scraping/flipkart/infos/' + device_name, 'rb') as file:
             dict = pickle.load(file)
