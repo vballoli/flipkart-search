@@ -38,13 +38,13 @@ def dataset():
     """
     Checks scraped dataset
     """
-    from search.app import search
+    from search.app import run_gui
     os.chdir(cur_dir)
     try:
         print("Checking for dataset")
         if os.listdir(cur_dir + '/scraping/flipkart').index('infos'):
             if len(os.listdir(cur_dir + '/scraping/flipkart/infos')) > 0:
-                search(dataset_path=cur_dir + '/scraping/flipkart/infos')
+                run_gui(dataset_path=cur_dir + '/scraping/flipkart/infos')
             else:
                 print("Dataset does not exist")
                 start_scrape()
@@ -68,11 +68,12 @@ def train_classifier():
             print("Found classifier")
         else:
             print("Classifier not found. Pretraining...")
-            os.system('python3 ' + cur_dir + '/sentiment/classifier.py')
+            os.system('python ' + cur_dir + '/sentiment/classifier.py')
     except Exception as e:
         pass
 
 if __name__=='__main__':
     print("Starting")
     train_classifier()
-    modules()
+    #modules()
+    dataset()

@@ -1,5 +1,6 @@
 from .vector_space import VectorSpace
 from .preprocess import *
+from scipy import stats
 
 def prepare_search(dataset_path):
     """
@@ -36,4 +37,4 @@ def get_sentiment(device_name):
                     elif stats.mode(sentiments)[0] == 0:
                         return " - Generally negative reviews"
     except Exception as e:
-        return ""
+        return " - " + str(e)
