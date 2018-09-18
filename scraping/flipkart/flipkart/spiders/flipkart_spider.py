@@ -2,6 +2,9 @@ import scrapy
 import pickle
 
 class FlipkartProductSpider(scrapy.Spider):
+    """
+    Runs a spider that retrieves all the urls of the phones sold on flipkart from the search page
+    """
     name="FlipkartProduct"
 
     def __init__(self):

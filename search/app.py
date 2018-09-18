@@ -114,10 +114,10 @@ def search(qin, K=10, dataset_path=None, cl=None, tf_idf_matrix=None):
                 return results
 
             for i in range(N):
-                score[i] = score[i] / len(cl[i])
+                score[i] = score[i] / len(cl[i])  # Score normalization according to corresponding document
 
             prev = None
-            for highscore in sorted(score, reverse=True)[:K]:
+            for highscore in sorted(score, reverse=True)[:K]:  # Retrieve sorted scores in descending order
                 device_name = document_list[score.index(highscore)]
                 print(str(device_name).strip(".pickle") + get_sentiment(device_name))
                 if device_name != prev:

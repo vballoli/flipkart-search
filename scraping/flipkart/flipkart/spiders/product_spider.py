@@ -3,6 +3,9 @@ import pickle
 import os
 
 class ProductSpider(scrapy.Spider):
+	"""
+	Runs a spider for product url and fetches specs, ratings, and full review links.
+	"""
 	name="ProductSpider"
 
 

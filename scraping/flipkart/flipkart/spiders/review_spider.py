@@ -3,6 +3,9 @@ import pickle
 import scrapy
 
 class ReviewSpider(scrapy.Spider):
+    """
+    Runs a spider for a given review url and saves all in a product_name.pickle
+    """
     name="ReviewSpider"
 
     def __init__(self):
