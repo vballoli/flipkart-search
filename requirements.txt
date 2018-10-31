@@ -1,0 +1,7 @@
+scrapy
+nltk
+numpy
+scipy
+pandas
+ttkthemes
+scikit-learn
